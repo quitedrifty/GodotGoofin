@@ -13,7 +13,7 @@ func state_process(delta):
 		next_state = states.Jump
 	elif character.dash_input and character.can_dash:
 		next_state = states.Dash
-	elif character.attack_input:
+	elif character.attack_input and character.can_attack:
 		next_state = states.Attack
 		
 func state_input(event : InputEvent):

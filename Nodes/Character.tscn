@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=3 uid="uid://e66imfqykg2o"]
+[gd_scene load_steps=83 format=3 uid="uid://e66imfqykg2o"]
 
 [ext_resource type="Script" path="res://Scripts/PlayerController.gd" id="1_w3idx"]
 [ext_resource type="Script" path="res://Nodes/Camera2D.gd" id="2_t4oqg"]
@@ -192,10 +192,26 @@ tracks/0/keys = {
 "values": [ExtResource("55_havxm"), ExtResource("56_4quc2"), ExtResource("57_jsmfk")]
 }
 
+[sub_resource type="Animation" id="Animation_jauyv"]
+resource_name = "Fall"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("44_n0e4a")]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mi47u"]
 _data = {
 "Attack": SubResource("Animation_map0a"),
 "Dash": SubResource("Animation_upt85"),
+"Fall": SubResource("Animation_jauyv"),
 "Idle": SubResource("Animation_c2ay6"),
 "Jump": SubResource("Animation_q3o4v"),
 "Run": SubResource("Animation_lk4x8"),
@@ -343,7 +359,7 @@ libraries = {
 [node name="PlayerSprite" type="Sprite2D" parent="."]
 position = Vector2(2.25001, -15.3653)
 scale = Vector2(0.30819, 0.30819)
-texture = ExtResource("58_57nb3")
+texture = ExtResource("44_n0e4a")
 offset = Vector2(0, 50)
 
 [node name="DashDuration" type="Timer" parent="."]
@@ -355,7 +371,14 @@ one_shot = true
 
 [node name="JumpBuffer" type="Timer" parent="."]
 
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+
 [connection signal="timeout" from="DashDuration" to="CharacterStateMachine/Dash" method="_on_dash_duration_timeout"]
 [connection signal="timeout" from="DashCooldown" to="." method="_on_dash_cooldown_timeout"]
 [connection signal="timeout" from="AttackDuration" to="CharacterStateMachine/Attack" method="_on_attack_duration_timeout"]
 [connection signal="timeout" from="JumpBuffer" to="." method="_on_jump_buffer_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]

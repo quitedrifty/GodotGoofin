@@ -11,7 +11,7 @@ func state_process(delta):
 		next_state = states.Dash
 	elif character.velocity.y > 0:
 		next_state = states.Fall
-	elif character.attack_input:
+	elif character.attack_input and character.can_attack:
 		next_state = states.Attack
 func state_input(event : InputEvent):
 	pass

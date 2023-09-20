@@ -15,6 +15,7 @@ var movement_input = Vector2.ZERO
 var jump_input = false
 var jump_input_just_pressed = false
 var attack_input = false 
+var attack_input_released = true
 var dash_input = false
 
 #player_movement
@@ -27,6 +28,8 @@ var last_direction = Vector2.RIGHT
 var can_dash = true
 var can_attack = true
 var jump_buffered = false
+var was_on_floor = false
+var coyote_time = false
 var max_jumps = 2
 var current_jumps = 0
 var wall_direction = 1
@@ -53,6 +56,8 @@ func _physics_process(delta):
 #			velocity.x = move_direction * speed
 #		else:
 #			velocity.x = move_toward(velocity.x, 0, speed)
+	was_on_floor = is_on_floor()
+
 	player_input()
 	move_and_slide()
 
@@ -61,6 +66,8 @@ func apply_gravity(delta):
 		velocity.y += gravity * delta
 		
 func apply_movement():
+	if coyote_time:
+		movement_input.y = 0
 	if movement_input.x > 0:
 		velocity.x = SPEED
 		player_sprite.flip_h = false
@@ -93,11 +100,14 @@ func player_input():
 		jump_input_just_pressed = false
 	
 	#attack
-	if Input.is_action_pressed("attack"):
+	if Input.is_action_pressed("attack") and attack_input_released:
+		attack_input_released = false
 		attack_input = true
 	else: 
 		attack_input = false
 	
+	if Input.is_action_just_released("attack"):
+		attack_input_released = true
 	#dash
 	if Input.is_action_just_pressed("dash"):
 		dash_input = true
@@ -113,3 +123,11 @@ func _on_dash_cooldown_timeout():
 
 func _on_jump_buffer_timeout():
 	jump_buffered = false
+
+
+func _on_attack_cooldown_timeout():
+	can_attack = true
+
+
+func _on_coyote_timer_timeout():
+	coyote_time = false
