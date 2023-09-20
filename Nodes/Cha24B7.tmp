@@ -1,0 +1,105 @@
+[gd_scene load_steps=22 format=3 uid="uid://e66imfqykg2o"]
+
+[ext_resource type="Script" path="res://Scripts/PlayerController.gd" id="1_w3idx"]
+[ext_resource type="Texture2D" uid="uid://4s8dep0krrh8" path="res://icon.svg" id="2_yfbfe"]
+[ext_resource type="Script" path="res://Nodes/CharacterStateMachine.gd" id="4_uyme5"]
+[ext_resource type="Script" path="res://Scripts/IdleState.gd" id="5_34qic"]
+[ext_resource type="Script" path="res://Scripts/WalkState.gd" id="6_0cmpq"]
+[ext_resource type="Script" path="res://Nodes/Attack.gd" id="7_3b211"]
+[ext_resource type="Script" path="res://Scripts/RunState.gd" id="7_sgft0"]
+[ext_resource type="Script" path="res://Scripts/JumpState.gd" id="8_rff1h"]
+[ext_resource type="Script" path="res://Scripts/FallState.gd" id="9_8u70j"]
+[ext_resource type="Script" path="res://Scripts/DashState.gd" id="10_iy31l"]
+[ext_resource type="Script" path="res://Scripts/ParryState.gd" id="12_0u8dg"]
+[ext_resource type="Script" path="res://Scripts/SpecialAttack.gd" id="13_dmsvw"]
+[ext_resource type="Script" path="res://Scripts/StunnedState.gd" id="14_d47gc"]
+[ext_resource type="Script" path="res://Scripts/WallSlideState.gd" id="15_sf0n3"]
+[ext_resource type="Script" path="res://Nodes/StateLabelDebug.gd" id="16_hegar"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8nek5"]
+size = Vector2(98, 95)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aq36v"]
+radius = 78.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_mpsak"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_t7mgb"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_arrw2"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_sh00b"]
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(572, 272)
+collision_layer = 32769
+collision_mask = 32769
+script = ExtResource("1_w3idx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -1.5)
+shape = SubResource("RectangleShape2D_8nek5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_yfbfe")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.44, 0.44)
+
+[node name="UpAttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UpAttackArea"]
+position = Vector2(-1, -80)
+shape = SubResource("CircleShape2D_aq36v")
+
+[node name="Sprite2D" type="Sprite2D" parent="UpAttackArea"]
+visible = false
+position = Vector2(2, -86.0469)
+scale = Vector2(57.4375, 95.9063)
+texture = SubResource("PlaceholderTexture2D_mpsak")
+
+[node name="DownAttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DownAttackArea"]
+position = Vector2(-2, 75)
+shape = SubResource("CircleShape2D_aq36v")
+
+[node name="Sprite2D" type="Sprite2D" parent="DownAttackArea"]
+visible = false
+position = Vector2(3, 74)
+scale = Vector2(58.25, 103.25)
+texture = SubResource("PlaceholderTexture2D_t7mgb")
+
+[node name="RightAttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightAttackArea"]
+position = Vector2(90, 5)
+shape = SubResource("CircleShape2D_aq36v")
+
+[node name="Sprite2D" type="Sprite2D" parent="RightAttackArea"]
+visible = false
+position = Vector2(100, 3)
+scale = Vector2(101.375, 62.25)
+texture = SubResource("PlaceholderTexture2D_arrw2")
+
+[node name="LeftAttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftAttackArea"]
+position = Vector2(-79, 0)
+shape = SubResource("CircleShape2D_aq36v")
+
+[node name="Sprite2D" type="Sprite2D" parent="LeftAttackArea"]
+visible = false
+position = Vector2(-83.625, 1.00002)
+scale = Vector2(95.25, 60)
+texture = SubResource("PlaceholderTexture2D_sh00b")
+
+[node name="CharacterStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state", "character")]
+script = ExtResource("4_uyme5")
+current_state = NodePath("Idle")
+character = NodePath("..")
+
+[node name="Idle" type="Node" parent="CharacterStateMac
