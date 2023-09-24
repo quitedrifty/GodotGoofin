@@ -7,6 +7,7 @@ class_name CharacterStateMachine
 @export var character : CharacterBody2D
 @export var states : Dictionary
 
+@export var previous_state : State
 
 func _ready():
 	for child in get_children():
@@ -35,6 +36,7 @@ func check_if_can_move():
 	
 func switch_states(new_state : State):
 	if current_state != null:
+		previous_state = current_state
 		current_state.on_exit()
 		current_state.next_state = null
 		

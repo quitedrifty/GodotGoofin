@@ -20,6 +20,8 @@ func state_process(delta):
 			next_state = states.Jump
 		else:
 			next_state = states.Idle
+	elif character.is_against_wall() and character.can_wall_slide:
+		next_state = states.WallSlide
 	elif character.dash_input and character.can_dash:
 		character.dashed_in_air = true
 		next_state = states.Dash
@@ -30,5 +32,9 @@ func state_input(event : InputEvent):
 	pass
 	
 func on_enter():
+	if not character.dropping:
+		character.can_wall_slide = true
 	character.anim_player.play("Fall")
 
+func on_exit():
+	character.dropping = false

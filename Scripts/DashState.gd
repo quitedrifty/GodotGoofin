@@ -13,10 +13,13 @@ var dashing = false
 func state_process(delta):
 	if character.jump_input_just_pressed:
 		next_state = states.Jump
+	elif character.is_against_wall() and character.can_wall_slide:
+		next_state = states.WallSlide
 	elif not dashing:
 		next_state = states.Fall
 	
 func on_enter():
+	character.wall_slide_timer.start(0.2)
 	character.can_dash = false
 	dashing = true
 	dash_duration_timer.start(dash_duration)

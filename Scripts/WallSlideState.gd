@@ -4,49 +4,31 @@ class_name WallSlideState
 
 func state_process(delta):
 	
-	character.velocity.y = 500
-	if character.is_on_floor():
+	character.velocity.y = 200
+	if character.is_grounded():
 		next_state = states.Idle
-	if not character.is_on_wall():
+	elif not character.is_against_wall():
 		next_state = states.Fall
-	
-func state_input(event : InputEvent):
-	if event.is_action_pressed("jump"):
-		if not Input.is_action_pressed("down"):
-			jump()
-		else:
-			drop()
-	if event.is_action_pressed("dash"):
-		dash()
-	if event.is_action_pressed("attack"):
-		attack()	
-	if event.is_action_pressed("parry"):
-		parry()	
-	if event.is_action_pressed("special_attack"):
-		special_attack()
+	elif character.movement_input == Vector2.DOWN:
+		character.dropping = true
+		next_state = states.Fall
+	elif character.jump_input_just_pressed:
+		next_state = states.Jump
+	elif character.dash_input and character.can_dash:
+		character.dashed_in_air = true
+		next_state = states.Dash
+	elif character.attack_input and character.can_attack:
+		next_state = states.Attack	
 
 func on_enter():
-	get_parent().anim_player.play("WallSlide")
+	character.current_jumps -= 1
+	
+	if character.face_wall() > 0:
+		character.player_sprite.flip_h = false
+	elif character.face_wall() < 0:
+		character.player_sprite.flip_h = true
+		
+	character.anim_player.play("WallSlide")
 
 func on_exit():
-	character.wall_slide_cooldown.start()
-
-func jump():
-	character.velocity.y = character.jump_velocity
-	next_state = states.Jump
-
-func drop():
-	pass
-
-func dash():
-	pass
-	
-func attack():
-	pass
-	
-func parry():
-	pass
-	
-func special_attack():
-	pass
-
+	character.can_wall_slide = false

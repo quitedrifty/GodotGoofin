@@ -4,10 +4,14 @@ extends CharacterBody2D
 @export var anim_player : AnimationPlayer
 
 @onready var character_state_machine : CharacterStateMachine = $CharacterStateMachine
-@onready var wall_slide_cooldown = $WallSlideCooldown
+@onready var wall_slide_timer = $WallSlideTimer
 @onready var player_sprite : Sprite2D = $PlayerSprite
 @onready var left_ground_raycast = $LeftGroundRaycast
 @onready var right_ground_raycast = $RightGroundRaycast
+@onready var top_right_raycast = $TopRightRaycast
+@onready var bottom_right_raycast = $BottomRightRaycast
+@onready var top_left_raycast = $TopLeftRaycast
+@onready var bottom_left_raycast = $BottomLeftRaycast
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 2
@@ -27,9 +31,11 @@ const JUMP_VELOCITY : float = -1200.0
 var last_direction = Vector2.RIGHT
 
 #mechanics
+var dropping = false
 var can_dash = true
 var dashed_in_air = false
 var can_attack = true
+var can_wall_slide = false
 var jump_buffered = false
 var was_on_floor = false
 var coyote_time = false
@@ -62,7 +68,10 @@ func _physics_process(delta):
 	if is_grounded():
 		was_on_floor = true
 		dashed_in_air = false
-
+	
+	if is_against_wall():
+		dashed_in_air = false
+		
 	player_input()
 	floor_snap_length = 10.0
 	move_and_slide()
@@ -124,6 +133,13 @@ func player_input():
 func flip():
 	player_sprite.flip_h = last_direction == Vector2.RIGHT
 	
+func face_wall():
+	if top_left_raycast.is_colliding() or bottom_left_raycast.is_colliding():
+		return -1
+	elif top_right_raycast.is_colliding() or bottom_right_raycast.is_colliding():
+		return 1
+	return 0
+	
 func _on_dash_cooldown_timeout():
 	if not dashed_in_air:
 		can_dash = true
@@ -142,7 +158,14 @@ func _on_coyote_timer_timeout():
 	
 func is_grounded():
 	if left_ground_raycast.is_colliding() or right_ground_raycast.is_colliding():
-		print("ground")
 		return true
-	print("air")
 	return false
+
+func is_against_wall():
+	if top_left_raycast.is_colliding() or top_right_raycast.is_colliding() or bottom_left_raycast.is_colliding() or bottom_right_raycast.is_colliding():
+		return true
+	return false
+
+func _on_wall_slide_timer_timeout():
+	if not is_grounded():
+		can_wall_slide = true

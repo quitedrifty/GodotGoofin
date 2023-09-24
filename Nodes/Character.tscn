@@ -376,10 +376,6 @@ one_shot = true
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
-[node name="Raycasts" type="Node2D" parent="."]
-
-[node name="GroundRaycasts" type="Node2D" parent="Raycasts"]
-
 [node name="LeftGroundRaycast" type="RayCast2D" parent="."]
 position = Vector2(-21, 52)
 target_position = Vector2(0, 13)
@@ -388,9 +384,29 @@ target_position = Vector2(0, 13)
 position = Vector2(22, 52)
 target_position = Vector2(0, 13)
 
+[node name="TopRightRaycast" type="RayCast2D" parent="."]
+position = Vector2(32, -50)
+target_position = Vector2(12, 0)
+
+[node name="BottomRightRaycast" type="RayCast2D" parent="."]
+position = Vector2(32, 35)
+target_position = Vector2(12, 0)
+
+[node name="TopLeftRaycast" type="RayCast2D" parent="."]
+position = Vector2(-28, -49)
+target_position = Vector2(-13, 0)
+
+[node name="BottomLeftRaycast" type="RayCast2D" parent="."]
+position = Vector2(-28, 35)
+target_position = Vector2(-13, 0)
+
+[node name="WallSlideTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="DashDuration" to="CharacterStateMachine/Dash" method="_on_dash_duration_timeout"]
 [connection signal="timeout" from="DashCooldown" to="." method="_on_dash_cooldown_timeout"]
 [connection signal="timeout" from="AttackDuration" to="CharacterStateMachine/Attack" method="_on_attack_duration_timeout"]
 [connection signal="timeout" from="JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="WallSlideTimer" to="." method="_on_wall_slide_timer_timeout"]
