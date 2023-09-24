@@ -3,6 +3,8 @@ extends State
 class_name JumpState
 
 func state_process(delta):
+	if not character.jump_input:
+		character.apply_gravity(delta*1.5)
 	character.apply_gravity(delta)
 	character.apply_movement()
 	if character.velocity.y > 0:
@@ -12,6 +14,7 @@ func state_process(delta):
 	elif character.jump_input_just_pressed and character.current_jumps < character.max_jumps:
 		next_state = states.Jump
 	elif character.dash_input and character.can_dash:
+		character.dashed_in_air = true
 		next_state = states.Dash
 	elif character.attack_input and character.can_attack:
 		next_state = states.Attack

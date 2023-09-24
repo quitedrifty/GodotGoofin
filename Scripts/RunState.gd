@@ -13,10 +13,11 @@ func state_process(delta):
 		next_state = states.Idle
 	elif character.jump_input_just_pressed:
 		next_state = states.Jump
-	elif not character.is_on_floor() and character.was_on_floor:
+	elif not character.is_grounded() and character.was_on_floor:
 		coyote_timer.start(0.1)
 		character.coyote_time = true
-	elif character.velocity.y > 0 and character.coyote_time == false:
+		character.was_on_floor = false
+	elif not character.is_grounded() and character.velocity.y > 0 and character.coyote_time == false:
 		next_state = states.Fall
 	elif character.dash_input and character.can_dash:
 		next_state = states.Dash

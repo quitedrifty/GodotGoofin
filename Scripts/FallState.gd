@@ -21,6 +21,7 @@ func state_process(delta):
 		else:
 			next_state = states.Idle
 	elif character.dash_input and character.can_dash:
+		character.dashed_in_air = true
 		next_state = states.Dash
 	elif character.attack_input and character.can_attack:
 		next_state = states.Attack

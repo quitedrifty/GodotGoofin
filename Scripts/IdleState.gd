@@ -3,6 +3,7 @@ extends State
 class_name IdleState
 
 func state_process(delta):
+	character.apply_gravity(delta)
 	if character.jump_input_just_pressed:
 		next_state = states.Jump
 	elif character.movement_input.x != 0:
